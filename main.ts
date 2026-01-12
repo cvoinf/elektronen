@@ -51,7 +51,7 @@ mySprite.setImage(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     `)
-controller.moveSprite(mySprite, 100, 100)
+controller.moveSprite(mySprite)
 forever(function () {
     // Die Reibung sorgt dafür, dass die Elektronen sich nach einiger Zeit beruhigen.
     for (let Wert of list) {
