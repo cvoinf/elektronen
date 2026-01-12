@@ -7,6 +7,7 @@ let dx = 0
 let mySprite: Sprite = null
 let list: Sprite[] = []
 list = sprites.allOfKind(SpriteKind.elektron)
+// Es werden 100 Elektronen erzeugt und in einer Liste abgespeichert
 for (let index = 0; index < 100; index++) {
     mySprite = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -15,9 +16,9 @@ for (let index = 0; index < 100; index++) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
         . . . . . . . . 5 . . . . . . . 
-        . . . . . . . 5 5 5 . . . . . . 
-        . . . . . . . 5 5 5 . . . . . . 
+        . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -31,10 +32,12 @@ for (let index = 0; index < 100; index++) {
     list.push(mySprite)
 }
 forever(function () {
+    // Die Reibung sorgt dafür, dass die Elektronen sich nach einiger Zeit beruhigen.
     for (let Wert of list) {
         Wert.vx = 0.85 * Wert.vx
         Wert.vy = 0.85 * Wert.vy
     }
+    // Am Rand sollen die Elektronen abprallen
     for (let Wert of list) {
         if (Wert.x > scene.screenWidth()) {
             Wert.vx = -1 * Wert.vx
@@ -53,6 +56,7 @@ forever(function () {
             mySprite.y = 0
         }
     }
+    // Jedes Elektron wird durch alle anderen beschleunigt, und zwar in entgegengesetzte Richtung, in Abhängigkeit vom Abstand
     for (let Wert of list) {
         Wert.ax = 0
         Wert.ay = 0
