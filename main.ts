@@ -29,32 +29,34 @@ for (let index = 0; index < 100; index++) {
         `, SpriteKind.elektron)
     mySprite.setPosition(randint(0, 10), randint(0, 10))
     mySprite.setVelocity(0, 0)
+    mySprite.setBounceOnWall(true)
+    mySprite.setStayInScreen(true)
     list.push(mySprite)
 }
+mySprite.setImage(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . 2 2 . . . . . . . . 
+    . . . . . . 2 2 . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+controller.moveSprite(mySprite, 100, 100)
 forever(function () {
     // Die Reibung sorgt dafür, dass die Elektronen sich nach einiger Zeit beruhigen.
     for (let Wert of list) {
-        Wert.vx = 0.85 * Wert.vx
-        Wert.vy = 0.85 * Wert.vy
-    }
-    // Am Rand sollen die Elektronen abprallen
-    for (let Wert of list) {
-        if (Wert.x > scene.screenWidth()) {
-            Wert.vx = -1 * Wert.vx
-            mySprite.x = scene.screenWidth()
-        }
-        if (Wert.x < 0) {
-            Wert.vx = -1 * Wert.vx
-            mySprite.x = 0
-        }
-        if (Wert.y > scene.screenHeight()) {
-            Wert.vy = -1 * Wert.vy
-            mySprite.y = scene.screenHeight()
-        }
-        if (Wert.y < 0) {
-            Wert.vy = -1 * Wert.vy
-            mySprite.y = 0
-        }
+        Wert.vx = 0.5 * Wert.vx
+        Wert.vy = 0.5 * Wert.vy
     }
     // Jedes Elektron wird durch alle anderen beschleunigt, und zwar in entgegengesetzte Richtung, in Abhängigkeit vom Abstand
     for (let Wert of list) {
@@ -66,10 +68,10 @@ forever(function () {
                 dy = Wert.y - Wert2.y
                 l = Math.sqrt(dx * dx + dy * dy)
                 if (Wert.x != Wert2.x) {
-                    Wert.ax += 100 / ((Wert.x - Wert2.x) * (Wert.x - Wert2.x)) * (dx / l)
+                    Wert.ax += 500 / ((Wert.x - Wert2.x) * (Wert.x - Wert2.x)) * (dx / l)
                 }
                 if (Wert.y != Wert2.y) {
-                    Wert.ay += 100 / ((Wert.y - Wert2.y) * (Wert.y - Wert2.y)) * (dy / l)
+                    Wert.ay += 500 / ((Wert.y - Wert2.y) * (Wert.y - Wert2.y)) * (dy / l)
                 }
             }
         }
