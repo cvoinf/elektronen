@@ -1,17 +1,29 @@
 namespace SpriteKind {
     export const elektron = SpriteKind.create()
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    Temperatur += 100
+    mySprite.sayText("" + convertToText(Temperatur) + "°C", 1000, false)
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (Temperatur > 100) {
+        Temperatur += -100
+        mySprite.sayText("" + convertToText(Temperatur) + "°C", 1000, false)
+    }
+})
 let l = 0
 let lquadrat = 0
 let dy = 0
 let dx = 0
 let mySprite: Sprite = null
+let Temperatur = 0
 let list: Sprite[] = []
 list = sprites.allOfKind(SpriteKind.elektron)
 let Reibung = 0.85
-let Abprallfaktor = -0.75
-let HoeheElektronSprite = 0.5
-let BreiteElektronSprite = 0.5
+let Abprallfaktor = -0.85
+let HoeheElektronSprite = 0.1
+let BreiteElektronSprite = 0.1
+Temperatur = 173
 // Es werden 100 Elektronen erzeugt und in einer Liste abgespeichert
 for (let index = 0; index < 100; index++) {
     mySprite = sprites.create(img`
@@ -28,6 +40,7 @@ mySprite.setImage(img`
     2 2 
     2 2 
     `)
+controller.moveSprite(mySprite)
 game.onUpdateInterval(0.1, function () {
     // Die Reibung sorgt dafür, dass die Elektronen sich nach einiger Zeit beruhigen.
     for (let Wert of list) {
@@ -47,6 +60,8 @@ game.onUpdateInterval(0.1, function () {
             Wert.y = 10 + HoeheElektronSprite
         }
         Wert.vy = Reibung * Wert.vy
+        Wert.vx += (randint(0, Temperatur) - Temperatur / 2) / 100
+        Wert.vy += (randint(0, Temperatur) - Temperatur / 2) / 100
     }
     // Jedes Elektron wird durch alle anderen beschleunigt, und zwar in entgegengesetzte Richtung, in Abhängigkeit vom Abstand
     for (let Wert of list) {
