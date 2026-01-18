@@ -62,7 +62,7 @@ game.onUpdate(function () {
         Wert.vy = Reibung * Wert.vy
         Wert.vx += (randint(0, Temperatur) - Temperatur / 2) / 100
         Wert.vy += (randint(0, Temperatur) - Temperatur / 2) / 100
-        if (Wert.tileKindAt(TileDirection.Center, sprites.dungeon.stairWest)) {
+        if (Wert.tileKindAt(TileDirection.Center, assets.tile`myTile1`)) {
             Wert.vx = Widerstand * Wert.vx
         }
     }
@@ -71,7 +71,7 @@ game.onUpdate(function () {
         Wert.ax = 0
         Wert.ay = 0
         if (BatterieBeschleunigung != 0) {
-            if (Wert.tileKindAt(TileDirection.Center, sprites.dungeon.greenOuterEast0)) {
+            if (Wert.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
                 if (Wert.vx > 0) {
                     Wert.vx = 0
                 }
