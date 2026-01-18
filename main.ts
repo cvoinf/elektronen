@@ -20,10 +20,10 @@ let Temperatur = 0
 let list: Sprite[] = []
 list = sprites.allOfKind(SpriteKind.elektron)
 let Reibung = 0.85
-let Abprallfaktor = -0.85
-let HoeheElektronSprite = 0.1
-let BreiteElektronSprite = 0.1
-Temperatur = 173
+let Abprallfaktor = -1 * Reibung
+Temperatur = 201
+let Ladung = 500
+let Rand = 5
 // Es werden 100 Elektronen erzeugt und in einer Liste abgespeichert
 for (let index = 0; index < 100; index++) {
     mySprite = sprites.create(img`
@@ -32,8 +32,6 @@ for (let index = 0; index < 100; index++) {
         `, SpriteKind.elektron)
     mySprite.setPosition(randint(85000, 95000) / 1000, randint(45000, 55000) / 1000)
     mySprite.setVelocity(0, 0)
-    mySprite.setBounceOnWall(false)
-    mySprite.setStayInScreen(false)
     list.push(mySprite)
 }
 mySprite.setImage(img`
@@ -41,24 +39,23 @@ mySprite.setImage(img`
     2 2 
     `)
 controller.moveSprite(mySprite)
-game.onUpdateInterval(0.1, function () {
-    // Die Reibung sorgt dafür, dass die Elektronen sich nach einiger Zeit beruhigen.
+game.onUpdate(function () {
     for (let Wert of list) {
-        if (Wert.x > scene.screenWidth() - 10) {
+        if (Wert.x > scene.screenWidth() - Rand) {
             Wert.vx = Abprallfaktor * Wert.vx
-            Wert.x = scene.screenWidth() - (10 - BreiteElektronSprite)
-        } else if (Wert.x < 10) {
+            Wert.x = 2 * (scene.screenWidth() - Rand) - Wert.x
+        } else if (Wert.x < 0 + Rand) {
             Wert.vx = Abprallfaktor * Wert.vx
-            Wert.x = 10 + BreiteElektronSprite
+            Wert.x = 2 * (0 + Rand) - Wert.x
+        }
+        if (Wert.y > scene.screenHeight() - Rand) {
+            Wert.vy = Abprallfaktor * Wert.vy
+            Wert.y = 2 * (scene.screenHeight() - Rand) - Wert.y
+        } else if (Wert.y < Rand) {
+            Wert.vy = Abprallfaktor * Wert.vy
+            Wert.y = 2 * (0 + Rand) - Wert.y
         }
         Wert.vx = Reibung * Wert.vx
-        if (Wert.y > scene.screenHeight() - 10) {
-            Wert.vy = Abprallfaktor * Wert.vy
-            Wert.y = scene.screenHeight() - (10 - HoeheElektronSprite)
-        } else if (Wert.y < 10) {
-            Wert.vy = Abprallfaktor * Wert.vy
-            Wert.y = 10 + HoeheElektronSprite
-        }
         Wert.vy = Reibung * Wert.vy
         Wert.vx += (randint(0, Temperatur) - Temperatur / 2) / 100
         Wert.vy += (randint(0, Temperatur) - Temperatur / 2) / 100
@@ -74,8 +71,8 @@ game.onUpdateInterval(0.1, function () {
                 lquadrat = dx * dx + dy * dy
                 l = Math.sqrt(lquadrat)
                 if (lquadrat != 0) {
-                    Wert.ax += 500 / lquadrat * (dx / l)
-                    Wert.ay += 500 / lquadrat * (dy / l)
+                    Wert.ax += Ladung / lquadrat * (dx / l)
+                    Wert.ay += Ladung / lquadrat * (dy / l)
                 }
             }
         }
