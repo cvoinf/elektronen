@@ -1,36 +1,39 @@
 namespace SpriteKind {
     export const elektron = SpriteKind.create()
+    export const Waende = SpriteKind.create()
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    Temperatur += 100
-    mySprite.sayText("" + convertToText(Temperatur) + "°C", 1000, false)
+    BatterieBeschleunigung = -200
+    mySprite.sayText("Batterie an", 1000, false)
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (Temperatur > 100) {
-        Temperatur += -100
-        mySprite.sayText("" + convertToText(Temperatur) + "°C", 1000, false)
-    }
+    BatterieBeschleunigung = 0
+    mySprite.sayText("Batterie aus", 1000, false)
 })
 let l = 0
 let lquadrat = 0
 let dy = 0
 let dx = 0
 let mySprite: Sprite = null
-let Temperatur = 0
+let BatterieBeschleunigung = 0
 let list: Sprite[] = []
 list = sprites.allOfKind(SpriteKind.elektron)
-let Reibung = 0.85
+let Reibung = 0.95
+let Widerstand = 0.3
 let Abprallfaktor = -1 * Reibung
-Temperatur = 201
-let Ladung = 500
+let Temperatur = 1
+let Ladung = 1000
+BatterieBeschleunigung = -200
 let Rand = 5
+tiles.setCurrentTilemap(tilemap`Level1`)
 // Es werden 100 Elektronen erzeugt und in einer Liste abgespeichert
 for (let index = 0; index < 100; index++) {
     mySprite = sprites.create(img`
         5 4 
         4 5 
         `, SpriteKind.elektron)
-    mySprite.setPosition(randint(85000, 95000) / 1000, randint(45000, 55000) / 1000)
+    tiles.placeOnRandomTile(mySprite, assets.tile`transparency16`)
+    mySprite.setBounceOnWall(true)
     mySprite.setVelocity(0, 0)
     list.push(mySprite)
 }
@@ -59,11 +62,22 @@ game.onUpdate(function () {
         Wert.vy = Reibung * Wert.vy
         Wert.vx += (randint(0, Temperatur) - Temperatur / 2) / 100
         Wert.vy += (randint(0, Temperatur) - Temperatur / 2) / 100
+        if (Wert.tileKindAt(TileDirection.Center, sprites.dungeon.stairWest)) {
+            Wert.vx = Widerstand * Wert.vx
+        }
     }
     // Jedes Elektron wird durch alle anderen beschleunigt, und zwar in entgegengesetzte Richtung, in Abhängigkeit vom Abstand
     for (let Wert of list) {
         Wert.ax = 0
         Wert.ay = 0
+        if (BatterieBeschleunigung != 0) {
+            if (Wert.tileKindAt(TileDirection.Center, sprites.dungeon.greenOuterEast0)) {
+                if (Wert.vx > 0) {
+                    Wert.vx = 0
+                }
+                Wert.ax += BatterieBeschleunigung
+            }
+        }
         for (let Wert2 of list) {
             if (Wert != Wert2) {
                 dx = Wert.x - Wert2.x
@@ -77,7 +91,4 @@ game.onUpdate(function () {
             }
         }
     }
-})
-forever(function () {
-	
 })
